@@ -1,0 +1,68 @@
+diff --git a/node_modules/@metaplex-foundation/umi/dist/cjs/Signer.cjs b/node_modules/@metaplex-foundation/umi/dist/cjs/Signer.cjs
+index 9062899..5b9c058 100644
+--- a/node_modules/@metaplex-foundation/umi/dist/cjs/Signer.cjs
++++ b/node_modules/@metaplex-foundation/umi/dist/cjs/Signer.cjs
+@@ -100,13 +100,13 @@ const createNoopSigner = publicKey => ({
+  * @category Signers and PublicKeys
+  */
+ function createNullSigner() {
+-  const error = new Error('Trying to use a NullSigner. ' + 'Did you forget to set a Signer on your Umi instance? ' + 'See the `signerIdentity` method for more information.');
++  const error = 'Trying to use a NullSigner. ' + 'Did you forget to set a Signer on your Umi instance? ' + 'See the `signerIdentity` method for more information.';
+   const errorHandler = () => {
+-    throw error;
++    throw new Error(error);
+   };
+   return {
+     get publicKey() {
+-      throw error;
++      throw new Error(error);
+     },
+     signMessage: errorHandler,
+     signTransaction: errorHandler,
+diff --git a/node_modules/@metaplex-foundation/umi/dist/esm/Signer.mjs b/node_modules/@metaplex-foundation/umi/dist/esm/Signer.mjs
+index 00609f7..8c5aeff 100644
+--- a/node_modules/@metaplex-foundation/umi/dist/esm/Signer.mjs
++++ b/node_modules/@metaplex-foundation/umi/dist/esm/Signer.mjs
+@@ -96,13 +96,13 @@ const createNoopSigner = publicKey => ({
+  * @category Signers and PublicKeys
+  */
+ function createNullSigner() {
+-  const error = new Error('Trying to use a NullSigner. ' + 'Did you forget to set a Signer on your Umi instance? ' + 'See the `signerIdentity` method for more information.');
++  const error = 'Trying to use a NullSigner. ' + 'Did you forget to set a Signer on your Umi instance? ' + 'See the `signerIdentity` method for more information.';
+   const errorHandler = () => {
+-    throw error;
++    throw new Error(error);
+   };
+   return {
+     get publicKey() {
+-      throw error;
++      throw new Error(error);
+     },
+     signMessage: errorHandler,
+     signTransaction: errorHandler,
+diff --git a/node_modules/@metaplex-foundation/umi/src/Signer.ts b/node_modules/@metaplex-foundation/umi/src/Signer.ts
+index 73d79ad..b598e9c 100644
+--- a/node_modules/@metaplex-foundation/umi/src/Signer.ts
++++ b/node_modules/@metaplex-foundation/umi/src/Signer.ts
+@@ -127,17 +127,17 @@ export const createNoopSigner = (publicKey: PublicKey): Signer => ({
+  * @category Signers and PublicKeys
+  */
+ export function createNullSigner(): Signer {
+-  const error = new Error(
++  const error = 
+     'Trying to use a NullSigner. ' +
+       'Did you forget to set a Signer on your Umi instance? ' +
+       'See the `signerIdentity` method for more information.'
+-  );
++  ;
+   const errorHandler = () => {
+-    throw error;
++    throw new Error(error);
+   };
+   return {
+     get publicKey(): PublicKey {
+-      throw error;
++      throw new Error(error);
+     },
+     signMessage: errorHandler,
+     signTransaction: errorHandler,

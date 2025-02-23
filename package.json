@@ -1,0 +1,51 @@
+{
+  "name": "flexar-nft-converter",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "patch-package",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "tests/createCollectionV1": "tsx ./src/scripts/tests/createCollectionV1.ts",
+    "tests/mintV1": "tsx ./src/scripts/tests/mintV1.ts",
+    "tests/createCollectionCore": "tsx ./src/scripts/tests/createCollectionCore.ts",
+    "tests/convert": "tsx ./src/scripts/tests/convert.ts"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-core": "^1.2.0",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@metaplex-foundation/mpl-toolbox": "^0.10.0",
+    "@metaplex-foundation/umi": "^1.0.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
+    "@metaplex-foundation/umi-signer-wallet-adapters": "^1.0.0",
+    "@metaplex-foundation/umi-web3js-adapters": "^1.0.0",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.98.0",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "delay": "^6.0.0",
+    "helius-sdk": "^1.4.2",
+    "next": "15.1.7",
+    "p-queue": "^8.1.0",
+    "patch-package": "^8.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.7",
+    "sass": "^1.85.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5"
+  }
+}

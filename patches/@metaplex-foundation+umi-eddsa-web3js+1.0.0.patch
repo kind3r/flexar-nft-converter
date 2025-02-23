@@ -1,0 +1,16 @@
+diff --git a/node_modules/@metaplex-foundation/umi-eddsa-web3js/dist/esm/createWeb3JsEddsa.mjs b/node_modules/@metaplex-foundation/umi-eddsa-web3js/dist/esm/createWeb3JsEddsa.mjs
+index b4f2633..e6e8657 100644
+--- a/node_modules/@metaplex-foundation/umi-eddsa-web3js/dist/esm/createWeb3JsEddsa.mjs
++++ b/node_modules/@metaplex-foundation/umi-eddsa-web3js/dist/esm/createWeb3JsEddsa.mjs
+@@ -1,9 +1,9 @@
+ import { publicKey, publicKeyBytes } from '@metaplex-foundation/umi';
+ import { fromWeb3JsKeypair, toWeb3JsPublicKey, fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters';
+ import { ed25519 } from '@noble/curves/ed25519';
+-import { SolanaCliConfig } from '@soceanfi/solana-cli-config';
++// import { SolanaCliConfig } from '@soceanfi/solana-cli-config';
+ import { Keypair, PublicKey } from '@solana/web3.js';
+-import { readFileSync } from 'fs';
++// import { readFileSync } from 'node:fs';
+ 
+ function createWeb3JsEddsa() {
+   const generateKeypair = () => fromWeb3JsKeypair(Keypair.generate());
