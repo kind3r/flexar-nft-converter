@@ -40,7 +40,7 @@ export default function ConvertPage() {
         )}
         <div className="row">
           <div className="col-12 col-lg-5 rounded" style={{ minHeight: "60vh", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <h2 className="mb-3 text-center">Convertible Assets <span className="badge rounded-pill bg-primary">{convertedAssets.length}</span></h2>
+            <h2 className="mb-3 text-center">Convertible Assets <span className="badge rounded-pill bg-primary">{convertibleAssets.length}</span></h2>
             <hr />
             <div className="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-4 d-flex justify-content-center">
               {convertibleAssets.map((asset, index) => (
