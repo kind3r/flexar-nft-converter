@@ -5,9 +5,9 @@ import { createTransactionBuilder, getDefaultUmi, toTransactionAndBlockHash, Tra
 import { CollectionV1, create, CreateArgs, fetchCollection } from "@metaplex-foundation/mpl-core";
 import { burnV1, BurnV1InstructionAccounts, BurnV1InstructionArgs, findMetadataPda, TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import { createNoopSigner, createSignerFromKeypair, generateSigner, publicKey, Signer, signerIdentity, TransactionBuilder, Umi } from "@metaplex-foundation/umi";
-import { fromWeb3JsKeypair } from "@metaplex-foundation/umi-web3js-adapters";
+import { fromWeb3JsInstruction, fromWeb3JsKeypair } from "@metaplex-foundation/umi-web3js-adapters";
 import { base58 } from "@metaplex-foundation/umi/serializers";
-import { Keypair } from "@solana/web3.js";
+import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import { DAS } from "helius-sdk";
 
 function buildConvertAsset(
@@ -74,14 +74,26 @@ export async function buildConvertMints(
   const assets = await getAssetsV1(mints);
 
   if (typeof assets !== "undefined" && assets.length > 0) {
-    console.log(JSON.stringify(assets));
-
     const umi = await getDefaultUmi();
     umi.use(signerIdentity(createNoopSigner(publicKey(owner))));
-    const authoritySigner =  createSignerFromKeypair(umi, fromWeb3JsKeypair(authorityKeypair));
+    const authoritySigner = createSignerFromKeypair(umi, fromWeb3JsKeypair(authorityKeypair));
 
     if (typeof collectionCoreAsset === "undefined") {
       collectionCoreAsset = await fetchCollection(umi, publicKey(process.env.CORE_COLLECTION));
+    }
+
+    let feeLamports: number | undefined;
+    let feeWallet: PublicKey | undefined;
+    if (
+      typeof process.env.FEE_LAMPORTS !== "undefined" && process.env.FEE_LAMPORTS !== ""
+      && typeof process.env.FEE_WALLET !== "undefined" && process.env.FEE_WALLET !== ""
+    ) {
+      try {
+        feeLamports = parseInt(process.env.FEE_LAMPORTS);
+        feeWallet = new PublicKey(process.env.FEE_WALLET);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     const transactions: TransactionAndBlockHash[] = [];
@@ -96,6 +108,20 @@ export async function buildConvertMints(
 
       for (const asset of assetSlice) {
         builder = builder.add(buildConvertAsset(umi, owner, asset, collectionCoreAsset, authoritySigner));
+        // add fees
+        if (typeof feeLamports !== "undefined" && typeof feeWallet !== "undefined") {
+          builder = builder.add(
+            {
+              instruction: fromWeb3JsInstruction(SystemProgram.transfer({
+                fromPubkey: new PublicKey(owner),
+                toPubkey: new PublicKey(feeWallet),
+                lamports: feeLamports
+              })),
+              bytesCreatedOnChain: 0,
+              signers: [umi.identity]
+            }
+          );
+        }
       }
 
       const transactionAndBlockHash = await toTransactionAndBlockHash(umi, builder, true, [authorityKeypair]);

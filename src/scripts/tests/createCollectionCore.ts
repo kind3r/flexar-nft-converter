@@ -1,5 +1,5 @@
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import "../loadEnv";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { generateSigner, keypairIdentity } from "@metaplex-foundation/umi";
 import { base58 } from "@metaplex-foundation/umi/serializers";

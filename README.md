@@ -38,36 +38,150 @@ A demo deployment on devnet can be accessed at [https://flexar-nft-converter.ver
 - Configure Core collection Royalties and delegates (Transfer/Freeze/Burn)
 - Easy to customize layout (dev involvement required)
 - Does not expose RPC to public
-- Batches transactions, less friction for users
+- Batches transactions, less friction for users providing a better user experience
 
 ## Initial setup and configuration
 
-First of all, fork this repo onto your own GitHub account as you will need to commit the configuration file that holds the hashlist for the NFT V1 collection that you want to convert. You will also need the last commit to be authored by your user in order to be able to deploy on Vercel.
+First of all, [fork this repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) onto your own GitHub account and clone it locally as you will need to commit the configuration file that holds the hashlist for the NFT V1 collection that you want to convert. You will also need the last commit to be authored by your user in order to be able to deploy on Vercel.
 
-Next, you will need a RPC that supports **DAS API** such as [Helius](https://www.helius.dev/) or [EXTRnode](https://extrnode.com/).
+Next, you will need a **RPC that supports DAS API** such as [Helius](https://www.helius.dev/) or [EXTRnode](https://extrnode.com/).
 
-Third optional requirement is a Vercel account that you can deploy the app onto. You can also deploy on your preferred hosting provider but it's not covered in this documentation.
+Third optional requirement is a **Vercel account** that you can deploy the app onto. You can also deploy on your preferred hosting provider but it's not covered in this documentation.
 
-**1. Define hashlist of old collection**
-- Tools to dump (collection id / verified creator)
-- Configuration file + git commit
+### 0. Development environment setup
+You will require the following software packages on your machine:
+- [Node.js 18.18](https://nodejs.org/) or later (**20.18** or later recommended).
+- [Git](https://git-scm.com/)
 
-**2. Configure and mint the Core Collection NFT**
-- Authority wallet
-- Royalties
-- Plugins/additional authorities
-- RPC setup
-- Mint Core Collection NFT
+You also need a [GitHub](https://github.com/) account and [set up Git](https://docs.github.com/en/get-started/getting-started-with-git/set-up-git) with your github credentials (I personally prefer [connecting with ssh](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/about-ssh)).
 
-**3. Deploy on Vercel**
-- Vercel project, link GitHub, paste env
+Fork this repo, clone the fork you made, switch to the folder you cloned in and then install dependencies:
+```sh
+git clone git@github.com:[YOUR_GITHUB_USERNAME]/flexar-nft-converter.git
+npm install
+```
 
+### 1. Define hashlist of old collection
+
+The [./src/config/hashlist.ts](./src/config/hashlist.ts) file is a simple array of **token addresses** (also known as **mint address** or **mint**) bundled into a Set for more efficient operation. Only NFTs who's address is in this list are eligible for conversion by the app.
+
+```js
+export const HASHLIST: HashList = new Set<string>([ 
+  // Add hashlist here of all V1 NFTs you want to convert
+  "ErRxoLFqEKZdjKgPk7iY3j8y6A6HMcPbJkTUP2ESPqXp",
+  "4sqWgDjAnq16nKvt86a2daD4MapVdFCBHuuPBvRrJCop",
+  "GSQCMthTAGBETpssg8Vam8za1f3vPS5NxCcfTuuGeNqW",
+  // add more mints here
+]);
+```
+
+You might already have a hashlist for your collection if it's listed on MagicEden, in case you don't here are a few tools to help you get it:
+- [Smithii Tools](https://tools.smithii.io/hashlist/solana)
+- [FFF Snapshot](https://famousfoxes.com/snapshot)
+
+After you're finished modifying the hashlist you should commit it to the cloned repo:
+```sh
+git add src/config/hashlist.ts
+git commit -m "Update hashlist"
+git push
+```
+
+### 2. Configure and mint the Core Collection NFT
+
+Create an empty file named `.env` in the root of the project. This will hold your configuration variables, one per line in the format **`SETTING`=*`VALUE`***. You can later copy paste it's content into Vercel. The order of the variables in the file is not important.
+
+- **`RPC`**
+
+Our first configuration variable is the RPC address. You will need a **RPC** that supports DAS API such as [Helius](https://www.helius.dev/) or [EXTRnode](https://extrnode.com/) with enough requests per second available to ensure it does not restrict users accessing the dAPP. The lowest paid plan is generally good enough. In some cases the free plan might also be sufficient. The RPC mainnet address will be stored in the `RPC` configuration variable inside `.env`.
+
+Your `.env` file should now look something like this:
+
+```sh
+RPC=https://your.rpc.address.com/some_api_key
+```
+
+- **`CORE_AUTHORITY`**
+
+Next we need to generate an **authority keypair**. The **authority** is responsible for minting the Core Collection NFT and adding the converted NFTs to this collection. You can also use the **authority** to update your Core items or collection in the future, add additional plugins, change royalties etc.
+
+```sh
+npm run generateKeypair
+```
+
+The script will output the public and private keys of the newly generated keypair. 
+
+Copy the private key and store it in the `CORE_AUTHORITY` configuration variable inside `.env`. Your `.env` file should now look something like this:
+
+```sh
+RPC=https://your.rpc.address.com/some_api_key
+CORE_AUTHORITY=abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
+```
+
+You will need about 0.004 SOL in the authority account for minting the Core collection NFT so go ahead and **transfer SOL** to the public key that was generated.
+
+> IMPORTANT: Keep your **authority keypair** safe and secure as it is the only way to manage your Core collection and NFTs in the future should you wish to make any changes. Don't share it with others !
+
+- **`CORE_ROYALTIES_BPS`** and **`CORE_ROYALTIES_CREATORS`**
+
+Collection royalties setup is the next step of the configuration. `CORE_ROYALTIES_BPS` holds the royalties percentage in basispoints that creators stored in `CORE_ROYALTIES_CREATORS` receive from secondary sales on various marketplaces. So for example 500 means 5%, 1000 means 10% and so on.
+
+`CORE_ROYALTIES_CREATORS` stores the creators and their percentage of the royalties. The format is `CREATOR_1_ADDRESS|PERCENTAGE1,CREATOR_2_ADDRESS|PERCENTAGE2,etc.`. **The sum of creator percentages needs to be 100%**.
+
+So for example if you want to have 5% royalties on secondary sales and you have 2 creators that get 20% and 80% your `.env` file should look now like this:
+
+```sh
+RPC=https://your.rpc.address.com/some_api_key
+CORE_AUTHORITY=abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
+CORE_ROYALTIES_BPS=500
+CORE_ROYALTIES_CREATORS=efgh5678efgh5678efgh5678efgh5678|20,ijkl9012ijkl9012ijkl9012ijkl9012|80
+```
+
+- **`CORE_PERMANENT_TRANSFER_DELEGATE`**, **`CORE_PERMANENT_FREEZE_DELEGATE`**, **`CORE_PERMANENT_BURN_DELEGATE`**
+
+You can optionally set public key collection level delegates that will always be able to perform specific actions on all the Core NFTs in the collection. Please see the Metaplex documentation for those plugins should you intend to use them:
+- [Permanent Transfer Plugin](https://developers.metaplex.com/core/plugins/permanent-transfer-delegate)
+- [Permanent Freeze Delegate](https://developers.metaplex.com/core/plugins/permanent-freeze-delegate)
+- [Permanent Burn Delegate](https://developers.metaplex.com/core/plugins/permanent-burn-delegate)
+
+You can always add them later to the collection, but this is out of the scope of our dAPP.
+
+- **`FEE_LAMPORTS`** and **`FEE_WALLET`**
+
+You can optionally set a user fee for each conversion performed. Set the `FEE_LAMPORTS` to the amount in lamports (1000000000 Lamports = 1 SOL) and the public key of the wallet collecting the fees in `FEE_WALLET`.
+
+### 3. Minting the Core collection NFT
+
+> TODO: metadata upload/copy
+
+Now that we have the RPC, authority and royalty information we need to mint the Core collection.
+
+```sh
+npm run mintCoreCollection
+```
+
+If successful the script will output the public key of the collection that you need to store in the `CORE_COLLECTION` configuration variable in the `.env` file. Your `.env` file is now complete and should now look something like this:
+
+```sh
+RPC=https://your.rpc.address.com/some_api_key
+CORE_AUTHORITY=abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
+CORE_ROYALTIES_BPS=500
+CORE_ROYALTIES_CREATORS=efgh5678efgh5678efgh5678efgh5678|20,ijkl9012ijkl9012ijkl9012ijkl9012|80
+CORE_COLLECTION=dcba4321dcba4321dcba4321dcba4321
+```
+
+### 4. Customization
+
+> TODO: Info on how to customize
+
+### 5. Deploy on Vercel
+
+> TODO: Vercel project, link GitHub, paste env
 
 ## TODO
-- Setup initial Core collection
-- Optional conversion fee
-- Config check
-- Scripts for fetching hashlist for collection id and verified creator
+- Script to upload new Core collection metadata or copy from old V1
+- Queue transaction sending and configure concurrency limit
+- Config check script
+- Information in frontend about what it is and how it works
 - Cleanup
 
 

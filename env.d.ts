@@ -20,7 +20,7 @@ namespace NodeJS {
     CORE_ROYALTIES_BPS: string;
     /**
      * A comma separated list of creators and their percentages of royalties on secondary sales
-     * The format is CREATOR_1_ADDRESS|PERCENTAGE,CREATOR_2_ADDRESS|PERCENTAGE...
+     * The format is CREATOR_1_ADDRESS|PERCENTAGE1,CREATOR_2_ADDRESS|PERCENTAGE2,...
      */
     CORE_ROYALTIES_CREATORS: string;
     /**
@@ -41,6 +41,18 @@ namespace NodeJS {
      * Can be empty, or set to a base58 encoded public key
      */
     CORE_PERMANENT_BURN_DELEGATE: string;
+    /**
+     * Optional conversion fee in lamports. Must also set FEE_WALLET for fees to apply
+     * 1000000000 = 1 SOL
+     *  100000000 = 0.1 SOL
+     *   10000000 = 0.01 SOL
+     *    1000000 = 0.001 SOL
+     */
+    FEE_LAMPORTS: string;
+    /**
+     * Optional wallet public key for collection conversion fees
+     */
+    FEE_WALLET: string;
 
     /** 
      * DAS enabled RPC url used for tests only 

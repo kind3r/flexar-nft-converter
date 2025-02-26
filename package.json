@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "generateKeypair": "node ./src/scripts/config/generateKeypair.js",
+    "mintCoreCollection": "tsx ./src/scripts/mintCoreCollection.ts",
     "tests/createCollectionV1": "tsx ./src/scripts/tests/createCollectionV1.ts",
     "tests/mintV1": "tsx ./src/scripts/tests/mintV1.ts",
     "tests/createCollectionCore": "tsx ./src/scripts/tests/createCollectionCore.ts",
