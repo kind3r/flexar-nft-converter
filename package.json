@@ -10,6 +10,7 @@
     "lint": "next lint",
     "generateKeypair": "node ./src/scripts/config/generateKeypair.js",
     "mintCoreCollection": "tsx ./src/scripts/mintCoreCollection.ts",
+    "generateCoreCollection": "tsx ./src/scripts/generateCoreCollection.ts",
     "tests/createCollectionV1": "tsx ./src/scripts/tests/createCollectionV1.ts",
     "tests/mintV1": "tsx ./src/scripts/tests/mintV1.ts",
     "tests/createCollectionCore": "tsx ./src/scripts/tests/createCollectionCore.ts",
@@ -40,12 +41,16 @@
     "react-hot-toast": "^2.5.2"
   },
   "devDependencies": {
+    "@metaplex-foundation/umi-uploader-irys": "1.0.0",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "colors": "^1.4.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
+    "inquirer": "^12.4.2",
+    "mime": "^4.0.6",
     "sass": "^1.85.0",
     "tsx": "^4.19.3",
     "typescript": "^5"

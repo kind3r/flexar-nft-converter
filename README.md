@@ -86,7 +86,7 @@ git commit -m "Update hashlist"
 git push
 ```
 
-### 2. Configure and mint the Core Collection NFT
+### 2. Configuration options
 
 Create an empty file named `.env` in the root of the project. This will hold your configuration variables, one per line in the format **`SETTING`=*`VALUE`***. You can later copy paste it's content into Vercel. The order of the variables in the file is not important.
 
@@ -151,15 +151,27 @@ You can optionally set a user fee for each conversion performed. Set the `FEE_LA
 
 ### 3. Minting the Core collection NFT
 
-> TODO: metadata upload/copy
+Now that we have the RPC, authority and royalty information we need to mint the Core collection. You will need about 0.004 SOL in the authority wallet for minting the Core collection NFT so go ahead and fund it. You will need some more SOL if you don't already have a V1 collection, see below.
 
-Now that we have the RPC, authority and royalty information we need to mint the Core collection.
+If you **already have a V1 collection**, we can use its metadata to mint the Core collection:
 
 ```sh
-npm run mintCoreCollection
+npm run mintCoreCollection <V1 collection address>
 ```
 
-If successful the script will output the public key of the collection that you need to store in the `CORE_COLLECTION` configuration variable in the `.env` file. Your `.env` file is now complete and should now look something like this:
+If you **do not have a V1 collection**, we need to configure one. For this we need to upload a **collection image** and its **json metadata** via [Irys](https://irys.xyz/). You will need to pay for the storage fees so make sure you have enough SOL in the authority wallet before proceeding (fees are very small so 0.0001 SOL should be enough).
+
+```sh
+npm run generateCoreCollection <image file>
+```
+
+The script will prompt you for the following:
+- Name (the name of your collection)
+- Symbol (optional, something short similar to token names)
+- Description
+- Url (optional, website of your project)
+
+If successful both scripts will output the public key of the collection that you need to store in the `CORE_COLLECTION` configuration variable in the `.env` file. Your `.env` file is now complete and should now look something like this:
 
 ```sh
 RPC=https://your.rpc.address.com/some_api_key
@@ -178,7 +190,6 @@ CORE_COLLECTION=dcba4321dcba4321dcba4321dcba4321
 > TODO: Vercel project, link GitHub, paste env
 
 ## TODO
-- Script to upload new Core collection metadata or copy from old V1
 - Queue transaction sending and configure concurrency limit
 - Config check script
 - Information in frontend about what it is and how it works
