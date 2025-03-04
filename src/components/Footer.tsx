@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -6,9 +7,9 @@ export default function Footer() {
       <div className="container-fluid bg-secondary-subtle bg-opacity-75 mt-5">
         <footer className="row py-5 mt-5">
           <div className="col-6 col-md-2 mb-3">
-            <a href="/" className="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+            <Link href="/" className="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
               <img src="https://www.flexar.space/FlexarIconBG.png" alt="Flexar" height="42" /> <span className="text-muted">© {(new Date()).getFullYear()}<br /></span>
-            </a>
+            </Link>
             <p>
               <a href="https://twitter.com/FlexarSpace" className="link-primary me-3" target="_blank"><i className="bi bi-twitter fs-3"></i></a>
               <a href="https://discord.gg/uBVgnSWydc" className="link-discord me-3" target="_blank"><i className="bi bi-discord fs-3"></i></a>
