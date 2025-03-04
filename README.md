@@ -183,16 +183,19 @@ CORE_COLLECTION=dcba4321dcba4321dcba4321dcba4321
 
 ### 4. Customization
 
-> TODO: Info on how to customize
+The app consists of a [homepage](./src/app/page.tsx) that explains a bit about the project and the [convert](./src/app/convert/page.tsx) page that performs the actual conversion. All the UI components are located in the [src/components](./src/components/) folder. The project uses bootstrap for building a simple layout. 
+All the asset detection and conversion logic is wrapped inside the [useAssets](./src/hooks/assets.ts) hook so that it can be easily reused. The hook makes use of server side functions located in the [src/lib](./src/lib/) folder.
+
+Feel free to customize the UI to your liking or even rewrite from scratch, make sure to keep the logic provided by the [useAssets](./src/hooks/assets.ts) hook as exemplified in the [convert](./src/app/convert/page.tsx) page.
 
 ### 5. Deploy on Vercel
 
 > TODO: Vercel project, link GitHub, paste env
 
+
 ## TODO
 - Queue transaction sending and configure concurrency limit
 - Config check script
-- Information in frontend about what it is and how it works
 - Cleanup
 
 

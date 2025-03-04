@@ -1,6 +1,6 @@
 "use client"
 
-import AssetCard from "@/app/convert/AssetCard";
+import AssetCard from "@/components/AssetCard";
 import useAssets from "@/hooks/assets";
 import useMint from "@/hooks/mint";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -18,7 +18,7 @@ export default function ConvertPage() {
     convertAssets,
   } = useAssets(wallet.publicKey?.toBase58());
 
-  // For testing purposes only
+  // For testing purposes only, should remove in production
   const {
     minting,
     canMint,
@@ -28,6 +28,35 @@ export default function ConvertPage() {
   return (
     <>
       <h1 className="my-5 text-center">Convert NFT Tool</h1>
+      <div className="container">
+        <div className="alert alert-warning">
+          This demo app deployment runs on <strong>Solana devnet</strong>
+        </div>
+        <p>If eligible V1 NFTs are detected, press the <strong>Convert</strong> button to transform them into Core NFTs (10 at a time).</p>
+        {canMint === true ? (
+          <>
+            <p>
+              You can also mint some test V1 NFTs:
+              <button className="btn btn-primary ms-3"
+                onClick={() => {
+                  if (wallet.publicKey !== null) {
+                    mintTestNFT(wallet.publicKey.toBase58());
+                  }
+                }}
+                disabled={wallet.publicKey === null || loading || converting || minting}
+              >
+                Mint Test NFT
+                {minting === true ? (
+                  <div className="spinner-border spinner-border-sm text-light ms-2" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                ) : ""}
+              </button>
+
+            </p>
+          </>
+        ) : ""}
+      </div>
       <div className="my-5 position-relative">
         {loading === true && (
           <div className="position-absolute top-0 start-0 end-0 bottom-0" style={{ zIndex: 1000 }}>
@@ -49,28 +78,7 @@ export default function ConvertPage() {
                 </div>
               ))}
             </div>
-            {canMint === true ? (
-              <>
-                <hr />
-                <div>
-                  <button className="btn btn-primary"
-                    onClick={() => {
-                      if (wallet.publicKey !== null) {
-                        mintTestNFT(wallet.publicKey.toBase58());
-                      }
-                    }}
-                    disabled={wallet.publicKey === null || loading || converting || minting}
-                  >
-                    Mint Test NFT
-                    {minting === true ? (
-                      <div className="spinner-border spinner-border-sm text-light ms-2" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    ) : ""}
-                  </button>
-                </div>
-              </>
-            ) : ""}
+
           </div>
           <div className="col-12 col-lg-2 d-flex justify-content-center align-items-center">
             <button className="btn btn-success"

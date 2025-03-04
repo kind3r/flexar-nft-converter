@@ -3,6 +3,7 @@ import "@/styles/custom.scss";
 import "@/styles/wallet.css";
 import BootstrapClient from "@/components/BootstrapClient";
 import { Toaster } from "react-hot-toast";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Flexar NFT converter",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <BootstrapClient />
         <div><Toaster position="bottom-left" /></div>
         {children}
+        <Footer />
       </body>
     </html>
   );
