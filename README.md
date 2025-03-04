@@ -24,7 +24,7 @@ The [Metaplex Core](https://developers.metaplex.com/core) standard has several a
 
 This dAPP is built as a proof of concept for converting Solana NFTs from V1 to Core by burning the old V1 NFT and minting a new Core version with the same metadata. The app is build with Next.js 15.x and utilizes the Metaplex Umi SDK 1.x for generating the burn and mint instructions. The code logic is fairly well separated from the UI so that it can be easily customized to fit a project's visual aspect. The app can be easily deployed on Vercel.
 
-A demo deployment on devnet can be accessed at [https://flexar-nft-converter.vercel.app/](https://flexar-nft-converter.vercel.app/).
+A demo deployment on devnet can be accessed at [https://convert.flexar.dev](https://convert.flexar.dev/).
 
 > There are currently two issues with Next + Umi so the Umi requires a couple of patches.
 
